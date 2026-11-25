@@ -5,18 +5,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import '../model/modelos.dart';
 
-//CONTROL: banco SQLite (aula 14), sessao com SharedPreferences (aula 14),
-//API de CEP com Dio (aula 13), validacoes, formatacoes e navegacao
 
-//aula 14 - SQLite (padrao MVC, pasta control)
-//Como na aula, todos os metodos do banco ficam numa unica classe.
-//As tabelas seguem o bd_padrinhosolidario.sql e as tabelas de fluxo do site 2.0
 class ControlBanco {
-  //nome da base e objeto database que sera usado para acessar as tabelas
   static const String _nomeBase = 'padrinho_solidario_v3.db';
   static Database? _database;
 
-  //tabelas que o painel administrativo pode listar e excluir
   final List<String> tabelasAdmin = [
     'usuarios',
     'padrinho',
@@ -27,23 +20,19 @@ class ControlBanco {
     'doacoes',
   ];
 
-  //data e hora no formato 2026-11-18 14:30:00
   String _agora() {
     return DateTime.now().toString().substring(0, 19);
   }
 
-  //data no formato 2026-11-18
   String _hoje() {
     return DateTime.now().toString().substring(0, 10);
   }
 
-  //metodo que inicia o banco, se nao estiver iniciado chama o metodo para abrir ou criar
   Future<Database> _getDatabase() async {
     _database ??= await _abrirBanco();
     return _database!;
   }
 
-  //pega o caminho de onde sera instalado o app e abre (ou cria) a base
   Future<Database> _abrirBanco() async {
     String caminho = await getDatabasesPath();
     return await openDatabase(
@@ -53,7 +42,6 @@ class ControlBanco {
     );
   }
 
-  //metodo que cria as tabelas, caso elas nao existam
   Future<void> _criarTabelas(Database db, int versao) async {
     await db.execute('''
       CREATE TABLE usuarios (
@@ -121,7 +109,6 @@ class ControlBanco {
         data_doacao TEXT NOT NULL,
         status TEXT NOT NULL
       )''');
-    //tabela do admin/setup.php
     await db.execute('''
       CREATE TABLE administradores (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -132,7 +119,6 @@ class ControlBanco {
     await _inserirDemonstrativos(db);
   }
 
-  //dados ficticios para o app ja abrir com instituicoes e criancas
   Future<void> _inserirDemonstrativos(Database db) async {
     List<List<String>> lares = [
       ['Lar Pequeno Príncipe', 'contato@larpequenoprincipe.org.br'],
@@ -156,7 +142,6 @@ class ControlBanco {
       idsInstituicao.add(idInstituicao);
     }
 
-    //status: 1 = Ativo e 0 = Inativo
     List<Apadrinhado> criancas = [
       Apadrinhado('Miguel', 7, 'Masculino',
           'Necessita de apoio com materiais escolares e acompanhamento educacional.', 1, idsInstituicao[0]),
@@ -172,9 +157,7 @@ class ControlBanco {
     }
   }
 
-  // ---------------- CONEXAO COM O BANCO (tela de login) ----------------
 
-  //abre o banco e conta os registros. Devolve ok (true/false) e um texto para a tela
   Future<Map<String, dynamic>> verificarBanco() async {
     try {
       Database db = await _getDatabase();
@@ -193,9 +176,7 @@ class ControlBanco {
     }
   }
 
-  // ---------------- CADASTROS (cadastro.php e cadastro-instituicao.php) ----------------
 
-  //confere se o e-mail ja esta cadastrado
   Future<bool> emailExiste(String email) async {
     Database db = await _getDatabase();
     List<Map<String, dynamic>> lista = await db.query(
@@ -206,7 +187,6 @@ class ControlBanco {
     return lista.isNotEmpty;
   }
 
-  //grava em usuarios e padrinho (os dois juntos ou nenhum), devolve o id do padrinho
   Future<int> cadastrarPadrinho(Usuario usuario, Padrinho padrinho) async {
     Database db = await _getDatabase();
     int idPadrinho = 0;
@@ -218,7 +198,6 @@ class ControlBanco {
     return idPadrinho;
   }
 
-  //grava em usuarios e instituicao, devolve o id da instituicao
   Future<int> cadastrarInstituicao(
       Usuario usuario, Instituicao instituicao) async {
     Database db = await _getDatabase();
@@ -231,9 +210,7 @@ class ControlBanco {
     return idInstituicao;
   }
 
-  // ---------------- LOGIN (login.php) ----------------
 
-  //perfil: 'padrinho' ou 'instituicao'. Devolve id, nome e email ou null
   Future<Map<String, dynamic>?> login(
       String perfil, String email, String senha) async {
     Database db = await _getDatabase();
@@ -250,10 +227,7 @@ class ControlBanco {
     return lista.first;
   }
 
-  // ---------------- AREA DO PADRINHO (boas-vindas.php) ----------------
 
-  //so aparecem criancas ativas, sem padrinho aprovado e sem apadrinhamento ativo
-  //o nome da crianca NAO e consultado aqui (regra do site)
   Future<List<Map<String, dynamic>>> listarCriancasDisponiveis() async {
     Database db = await _getDatabase();
     return await db.rawQuery('''
@@ -271,7 +245,6 @@ class ControlBanco {
     ''');
   }
 
-  //devolve '' quando deu certo ou a mensagem de erro
   Future<String> solicitarApadrinhamento(int idPadrinho, int idCrianca) async {
     Database db = await _getDatabase();
     List<Map<String, dynamic>> crianca = await db.rawQuery('''
@@ -305,7 +278,6 @@ class ControlBanco {
     return '';
   }
 
-  //o nome da crianca so e devolvido quando a solicitacao esta Aprovado
   Future<List<Map<String, dynamic>>> listarSolicitacoesPadrinho(
       int idPadrinho) async {
     Database db = await _getDatabase();
@@ -322,9 +294,7 @@ class ControlBanco {
     ''', [idPadrinho]);
   }
 
-  // ---------------- DOACAO (doacao.php) ----------------
 
-  //apadrinhamentos aprovados do padrinho (so eles podem receber doacao)
   Future<List<Map<String, dynamic>>> listarVinculosAprovados(
       int idPadrinho) async {
     Database db = await _getDatabase();
@@ -340,7 +310,6 @@ class ControlBanco {
     ''', [idPadrinho]);
   }
 
-  //devolve '' quando deu certo ou a mensagem de erro
   Future<String> registrarDoacao(int idPadrinho, int idSolicitacao,
       String tipo, double? valor, String descricao) async {
     Database db = await _getDatabase();
@@ -365,7 +334,6 @@ class ControlBanco {
     return '';
   }
 
-  // ---------------- INSTITUICOES (instituicoes.php) ----------------
 
   Future<List<Map<String, dynamic>>> listarInstituicoes() async {
     Database db = await _getDatabase();
@@ -391,7 +359,6 @@ class ControlBanco {
     return lista.first;
   }
 
-  // ---------------- PAINEL DA INSTITUICAO (painel-instituicao.php) ----------------
 
   Future<List<Map<String, dynamic>>> listarSolicitacoesInstituicao(
       int idInstituicao) async {
@@ -409,7 +376,6 @@ class ControlBanco {
     ''', [idInstituicao]);
   }
 
-  //criancas da instituicao e, quando houver, o padrinho do apadrinhamento ativo
   Future<List<Map<String, dynamic>>> listarCriancasInstituicao(
       int idInstituicao) async {
     Database db = await _getDatabase();
@@ -447,8 +413,6 @@ class ControlBanco {
     ''', [idInstituicao]);
   }
 
-  //aprova a solicitacao: cria o apadrinhamento ativo e recusa as outras pendentes
-  //da mesma crianca. Tudo dentro de uma transacao (ou grava tudo ou nada)
   Future<String> aprovarSolicitacao(int idSolicitacao, int idInstituicao) async {
     Database db = await _getDatabase();
     try {
@@ -531,7 +495,6 @@ class ControlBanco {
     return '';
   }
 
-  //cancela o apadrinhamento ativo e a solicitacao aprovada correspondente
   Future<String> cancelarApadrinhamento(
       int idApadrinhamento, int idInstituicao) async {
     Database db = await _getDatabase();
@@ -566,13 +529,11 @@ class ControlBanco {
     }
   }
 
-  //cadastra a crianca (usado pela instituicao e pelo admin)
   Future<void> cadastrarApadrinhado(Apadrinhado crianca) async {
     Database db = await _getDatabase();
     await db.insert('apadrinhado', crianca.toMap());
   }
 
-  //ativa (1) ou inativa (0) uma crianca da propria instituicao
   Future<String> alternarStatusCrianca(
       int idCrianca, int novoStatus, int idInstituicao) async {
     Database db = await _getDatabase();
@@ -588,7 +549,6 @@ class ControlBanco {
     return '';
   }
 
-  //status: Recebida ou Não Recebida
   Future<String> atualizarStatusDoacao(
       int idDoacao, int idInstituicao, String status) async {
     Database db = await _getDatabase();
@@ -604,7 +564,6 @@ class ControlBanco {
     return '';
   }
 
-  // ---------------- ADMINISTRADOR (pasta admin) ----------------
 
   Future<bool> adminExiste() async {
     Database db = await _getDatabase();
@@ -634,7 +593,6 @@ class ControlBanco {
     return lista.first;
   }
 
-  //lista uma das tabelas do painel (a senha dos usuarios nao e exibida)
   Future<List<Map<String, dynamic>>> listarTabela(String tabela) async {
     if (!tabelasAdmin.contains(tabela)) {
       return [];
@@ -653,10 +611,7 @@ class ControlBanco {
   }
 }
 
-//aula 14 - SharedPreferences (chave e valor)
-//Faz o papel da sessao do PHP: guarda quem esta logado no aparelho
 class ControlSessao {
-  //grava os dados de quem fez login ou cadastro
   Future<void> salvar(String perfil, int id, String nome, String email) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('perfil', perfil); //padrinho ou instituicao
@@ -665,7 +620,6 @@ class ControlSessao {
     await prefs.setString('email', email);
   }
 
-  //le os dados gravados, se nao houver ninguem logado devolve null
   Future<Map<String, dynamic>?> ler() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? perfil = prefs.getString('perfil');
@@ -680,16 +634,13 @@ class ControlSessao {
     };
   }
 
-  //equivale ao sair.php
   Future<void> limpar() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
   }
 }
 
-//aula 13 - classe responsavel por fazer a requisicao para a API
 class CepService {
-  //objeto dio com a url, tempo de conexao e tempo de timeout
   final Dio _dio = Dio(
     BaseOptions(
       baseUrl: 'https://viacep.com.br/ws/',
@@ -698,13 +649,10 @@ class CepService {
     ),
   );
 
-  //metodo chamado pela interface com o cep digitado
   Future<Cep?> buscarCep(String cep) async {
     try {
       final response = await _dio.get('$cep/json/');
-      //200 = sucesso na busca
       if (response.statusCode == 200) {
-        //quando o cep nao existe a API devolve {"erro": true}
         if (response.data['erro'] == true) {
           return null;
         }
@@ -717,17 +665,14 @@ class CepService {
   }
 }
 
-//deixa somente os numeros do texto
 String digitos(String valor) {
   return valor.replaceAll(RegExp(r'\D'), '');
 }
 
-//confere se o e-mail tem o formato nome@dominio.com
 bool emailValido(String email) {
   return RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(email);
 }
 
-//(11) 9 1234-5678 ou (11) 1234-5678
 String formatarTelefone(String telefone) {
   String n = digitos(telefone);
   if (n.length == 11) {
@@ -739,7 +684,6 @@ String formatarTelefone(String telefone) {
   return telefone;
 }
 
-//2026-11-18 14:30:00 vira 18/11/2026 14:30
 String formatarData(String? valor) {
   if (valor == null || valor.length < 16) {
     return valor ?? '';
@@ -747,7 +691,6 @@ String formatarData(String? valor) {
   return "${valor.substring(8, 10)}/${valor.substring(5, 7)}/${valor.substring(0, 4)} ${valor.substring(11, 16)}";
 }
 
-//12.5 vira R$ 12,50
 String formatarValor(dynamic valor) {
   if (valor == null) {
     return '—';
@@ -755,13 +698,10 @@ String formatarValor(dynamic valor) {
   return "R\$ ${(valor as num).toStringAsFixed(2).replaceAll('.', ',')}";
 }
 
-//aula 06 - Navigator.push cria a rota para abrir outra tela
 void abreOutraTela(BuildContext ctx, Widget page) {
   Navigator.push(ctx, MaterialPageRoute(builder: (context) => page));
 }
 
-//abre a nova tela no lugar da atual (usado depois do login e do cadastro,
-//para o botao voltar nao retornar para a tela de login)
 void abreTelaSubstituindo(BuildContext ctx, Widget page) {
   Navigator.pushReplacement(ctx, MaterialPageRoute(builder: (context) => page));
 }

@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import '../control/control.dart';
 import 'visual.dart';
 
-//VIEW: area do administrador (pasta admin do site)
-
-//login do admin; se ainda nao existir administrador, abre a criacao do primeiro
 class AdminLogin extends StatefulWidget {
   @override
   State<AdminLogin> createState() => _AdminLoginState();
@@ -72,7 +69,6 @@ class _AdminLoginState extends State<AdminLogin> {
   }
 }
 
-//cria o primeiro administrador
 class AdminSetup extends StatefulWidget {
   @override
   State<AdminSetup> createState() => _AdminSetupState();
@@ -126,7 +122,6 @@ class _AdminSetupState extends State<AdminSetup> {
   }
 }
 
-//painel: lista as tabelas do banco e permite excluir registros
 class AdminPainel extends StatefulWidget {
   @override
   State<AdminPainel> createState() => _AdminPainelState();

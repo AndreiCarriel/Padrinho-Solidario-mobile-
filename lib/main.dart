@@ -6,14 +6,12 @@ void main() {
   runApp(MyApp());
 }
 
-//classe responsavel por montar a estrutura de todo o projeto
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Padrinho Solidário',
-      debugShowCheckedModeBanner: false, //tira o banner de debug
-      //o tema muda o visual de TODO o app (barra, botoes e inputs) em um so lugar
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(seedColor: corPrimaria),

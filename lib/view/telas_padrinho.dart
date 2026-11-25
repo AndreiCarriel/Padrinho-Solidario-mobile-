@@ -7,9 +7,6 @@ import 'telas_admin.dart';
 import 'telas_instituicao.dart';
 import 'visual.dart';
 
-//VIEW: Login (primeira tela), Cadastro de padrinho, area do padrinho e Doacao
-
-//login.php - e a primeira tela do app
 class Login extends StatefulWidget {
   @override
   State<Login> createState() => _LoginState();
@@ -24,7 +21,6 @@ class _LoginState extends State<Login> {
   bool _bancoOk = false;
   String _bancoTexto = 'Verificando o banco de dados...';
 
-  //aula 14 - metodo start chamado quando a tela abre: confere a conexao com o banco
   @override
   void initState() {
     super.initState();
@@ -46,7 +42,6 @@ class _LoginState extends State<Login> {
       appBar: AppBar(
         title: Text("Padrinho Solidário"),
         actions: <Widget>[
-          //aula 06 - IconButton na AppBar, abre a area administrativa
           IconButton(
             icon: Icon(Icons.admin_panel_settings_outlined),
             onPressed: () {
@@ -86,7 +81,6 @@ class _LoginState extends State<Login> {
           child: Text("Acesse sua conta usando seu e-mail e senha.",
               textAlign: TextAlign.center, style: estiloSuave),
         ),
-        //situacao da conexao com o banco de dados
         caixaAviso(_bancoTexto, _bancoOk ? corVerde : corVermelho,
             _bancoOk ? Icons.storage : Icons.error_outline),
         Container(
@@ -97,7 +91,6 @@ class _LoginState extends State<Login> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text("Tipo de acesso", style: estiloTitulo),
-              //aula 06 - Radio (o grupo e controlado pelo RadioGroup)
               RadioGroup<String>(
                 groupValue: _perfil,
                 onChanged: (String? valor) {
@@ -194,14 +187,12 @@ class _LoginState extends State<Login> {
   }
 }
 
-//cadastro.php
 class CadastroPadrinho extends StatefulWidget {
   @override
   State<CadastroPadrinho> createState() => _CadastroPadrinhoState();
 }
 
 class _CadastroPadrinhoState extends State<CadastroPadrinho> {
-  //um controller para cada input (aula 03)
   TextEditingController _controllerNome = TextEditingController();
   TextEditingController _controllerEmail = TextEditingController();
   TextEditingController _controllerTelefone = TextEditingController();
@@ -311,7 +302,6 @@ class _CadastroPadrinhoState extends State<CadastroPadrinho> {
   }
 }
 
-//boas-vindas.php (area do padrinho: apadrinhados, solicitacoes e criancas disponiveis)
 class BoasVindas extends StatefulWidget {
   @override
   State<BoasVindas> createState() => _BoasVindasState();
@@ -327,7 +317,6 @@ class _BoasVindasState extends State<BoasVindas> {
   String _mensagem = '';
   String _erro = '';
 
-  //aula 14 - metodo start chamado quando a tela abre
   @override
   void initState() {
     super.initState();
@@ -428,7 +417,6 @@ class _BoasVindasState extends State<BoasVindas> {
     }
     return _solicitacoes.map<Widget>((item) {
       bool aprovado = item['status'] == 'Aprovado';
-      //o nome so aparece depois da aprovacao
       String titulo =
           aprovado ? "${item['nome_apadrinhado']}" : "Criança #${item['crianca_id']}";
       return cartaoSimples(<Widget>[
@@ -479,9 +467,7 @@ class _BoasVindasState extends State<BoasVindas> {
   }
 }
 
-//doacao.php (so para apadrinhamentos aprovados)
 class TelaDoacao extends StatefulWidget {
-  //parametro do construtor (aula 06): ja deixa o apadrinhado escolhido
   final int? solicitacaoId;
   TelaDoacao({this.solicitacaoId});
 
@@ -495,8 +481,8 @@ class _TelaDoacaoState extends State<TelaDoacao> {
   TextEditingController _controllerDescricao = TextEditingController();
   int _idPadrinho = 0;
   List<Map<String, dynamic>> _vinculos = []; //apadrinhamentos aprovados
-  int? _vinculoEscolhido; //valor do Radio
-  String? _tipoEscolhido; //valor do Radio
+  int? _vinculoEscolhido; 
+  String? _tipoEscolhido;
   String _erro = '';
   bool _sucesso = false;
   final List<String> _tipos = [
@@ -557,7 +543,6 @@ class _TelaDoacaoState extends State<TelaDoacao> {
               "Você ainda não possui apadrinhamentos aprovados. A doação ficará disponível depois que a instituição aceitar uma solicitação.")
         else ...[
           cartaoSecao("Para quem?", Icons.child_care, <Widget>[
-            //aula 06 - Radio: uma linha para cada opcao
             RadioGroup<int>(
               groupValue: _vinculoEscolhido,
               onChanged: (int? valor) {

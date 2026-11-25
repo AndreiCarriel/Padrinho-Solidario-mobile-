@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import '../widgets/buttons.dart';
 import '../widgets/input.dart';
 
-//VISUAL: cores e funcoes de apoio para deixar todas as telas com o mesmo estilo.
-//Sao metodos que retornam widgets (como na aula 03), sem criar classes novas.
-//Mudou uma cor aqui? Muda no app inteiro.
-
-// ---------------- CORES (mesma paleta do site em PHP) ----------------
 const Color corPrimaria = Color(0xFFB95F3E);
 const Color corEscura = Color(0xFF5B2A1A);
 const Color corFundo = Color(0xFFFBF3EC);
@@ -16,7 +11,6 @@ const Color corVerde = Color(0xFF2E7D5B);
 const Color corAmarelo = Color(0xFFC77B12);
 const Color corVermelho = Color(0xFFB3382C);
 
-// ---------------- ESTILOS DE TEXTO ----------------
 const TextStyle estiloTitulo =
     TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: corTexto);
 const TextStyle estiloSecao =
@@ -24,9 +18,6 @@ const TextStyle estiloSecao =
 const TextStyle estiloNormal = TextStyle(fontSize: 14, color: corTexto);
 const TextStyle estiloSuave = TextStyle(fontSize: 12, color: corSuave);
 
-// ---------------- DECORACOES ----------------
-
-//cartao branco com cantos redondos e sombra suave
 BoxDecoration decoCartao() {
   return BoxDecoration(
     color: Colors.white,
@@ -41,7 +32,6 @@ BoxDecoration decoCartao() {
   );
 }
 
-//cor do selo de status (Pendente, Aprovado, etc.)
 Color corStatus(String status) {
   if (status == 'Aprovado' || status == 'Recebida' || status == 'Ativo' ||
       status == 'Ativa' || status == 'Disponível') {
@@ -54,14 +44,10 @@ Color corStatus(String status) {
   return corAmarelo; //Pendente e Informada
 }
 
-// ---------------- PEQUENOS BLOCOS ----------------
-
-//espaco em branco entre os widgets
 Widget espaco(double largura, double altura) {
   return Container(width: largura, height: altura);
 }
 
-//selo colorido com o status
 Widget chipStatus(String texto) {
   Color cor = corStatus(texto);
   return Container(
@@ -77,7 +63,6 @@ Widget chipStatus(String texto) {
   );
 }
 
-//bolinha colorida com um icone dentro
 Widget iconeCirculo(IconData icone, Color cor) {
   return Container(
     width: 44,
@@ -91,7 +76,6 @@ Widget iconeCirculo(IconData icone, Color cor) {
   );
 }
 
-//topo de um cartao: icone, titulo, subtitulo e (opcional) selo de status
 Widget cabecalhoCartao(IconData icone, Color cor, String titulo, String subtitulo,
     {String? status}) {
   return Row(
@@ -112,7 +96,6 @@ Widget cabecalhoCartao(IconData icone, Color cor, String titulo, String subtitul
   );
 }
 
-//uma linha com icone pequeno e texto
 Widget linhaInfo(IconData icone, String texto) {
   return Container(
     margin: EdgeInsets.only(top: 8),
@@ -127,7 +110,6 @@ Widget linhaInfo(IconData icone, String texto) {
   );
 }
 
-//rotulo pequeno em cima e valor embaixo
 Widget rotuloValor(String rotulo, String valor) {
   return Container(
     margin: EdgeInsets.only(top: 12),
@@ -141,7 +123,6 @@ Widget rotuloValor(String rotulo, String valor) {
   );
 }
 
-//caixa de mensagem (sucesso, erro ou informacao)
 Widget caixaAviso(String texto, Color cor, IconData icone) {
   return Container(
     margin: EdgeInsets.only(top: 12),
@@ -162,7 +143,6 @@ Widget caixaAviso(String texto, Color cor, IconData icone) {
   );
 }
 
-//tela sem nada para mostrar
 Widget vazio(IconData icone, String texto) {
   return Container(
     margin: EdgeInsets.only(top: 24),
@@ -178,7 +158,6 @@ Widget vazio(IconData icone, String texto) {
   );
 }
 
-//faixa colorida no topo das areas logadas
 Widget bannerTopo(String titulo, String subtitulo, IconData icone) {
   return Container(
     padding: EdgeInsets.all(20),
@@ -218,7 +197,6 @@ Widget bannerTopo(String titulo, String subtitulo, IconData icone) {
   );
 }
 
-//titulo de secao dentro da tela (fora de cartao)
 Widget tituloSecao(String texto) {
   return Container(
     margin: EdgeInsets.only(top: 20),
@@ -226,7 +204,6 @@ Widget tituloSecao(String texto) {
   );
 }
 
-//cartao branco com titulo e icone, para agrupar campos de formulario
 Widget cartaoSecao(String titulo, IconData icone, List<Widget> filhos) {
   return Container(
     margin: EdgeInsets.only(top: 16),
@@ -248,7 +225,6 @@ Widget cartaoSecao(String titulo, IconData icone, List<Widget> filhos) {
   );
 }
 
-//cartao branco simples para itens de lista
 Widget cartaoSimples(List<Widget> filhos) {
   return Container(
     margin: EdgeInsets.only(top: 12),
@@ -261,7 +237,6 @@ Widget cartaoSimples(List<Widget> filhos) {
   );
 }
 
-//usa o SEU widget Input, so acrescenta um espaco em cima
 Widget campo(String label, String hint, TextEditingController controller) {
   return Container(
     margin: EdgeInsets.only(top: 14),
@@ -269,8 +244,6 @@ Widget campo(String label, String hint, TextEditingController controller) {
   );
 }
 
-//campo de senha: o Input original nao tem obscureText, entao aqui usamos o mesmo
-//TextFormField dele com obscureText: true (os pontinhos no lugar das letras)
 Widget campoSenha(String label, String hint, TextEditingController controller) {
   return Container(
     margin: EdgeInsets.only(top: 14),
@@ -283,7 +256,6 @@ Widget campoSenha(String label, String hint, TextEditingController controller) {
   );
 }
 
-//usa o SEU widget Buttons, so acrescenta um espaco em cima
 Widget botao(String texto, void Function() onClick) {
   return Container(
     margin: EdgeInsets.only(top: 16),
@@ -291,7 +263,6 @@ Widget botao(String texto, void Function() onClick) {
   );
 }
 
-//abas no topo da tela (mesma ideia do InkWell da aula de Firebase, que da o clique)
 Widget abas(List<String> nomes, int atual, void Function(int) aoTocar) {
   return Container(
     margin: EdgeInsets.only(top: 16),
@@ -333,7 +304,6 @@ Widget abas(List<String> nomes, int atual, void Function(int) aoTocar) {
   );
 }
 
-//opcao do Radio (aula 06): bolinha + texto, e o texto tambem seleciona
 Widget opcaoRadio<T>(String texto, T valor, void Function() aoTocar) {
   return InkWell(
     onTap: aoTocar,

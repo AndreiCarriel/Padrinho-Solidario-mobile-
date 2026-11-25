@@ -4,9 +4,6 @@ import '../control/control.dart';
 import '../model/modelos.dart';
 import 'visual.dart';
 
-//VIEW: Cadastro da instituicao e painel da instituicao
-
-//cadastro-instituicao.php (o botao Buscar CEP usa o web service da aula 13)
 class CadastroInstituicao extends StatefulWidget {
   @override
   State<CadastroInstituicao> createState() => _CadastroInstituicaoState();
@@ -146,7 +143,6 @@ class _CadastroInstituicaoState extends State<CadastroInstituicao> {
   }
 }
 
-//painel-instituicao.php
 class PainelInstituicao extends StatefulWidget {
   @override
   State<PainelInstituicao> createState() => _PainelInstituicaoState();
@@ -162,10 +158,9 @@ class _PainelInstituicaoState extends State<PainelInstituicao> {
   List<Map<String, dynamic>> _solicitacoes = [];
   List<Map<String, dynamic>> _criancas = [];
   List<Map<String, dynamic>> _doacoes = [];
-  int _aba = 0; //0 pedidos, 1 criancas, 2 doacoes, 3 dados
-  String _filtro = 'todas'; //valor do Radio: todas, disponiveis, apadrinhadas, inativas
-  String _sexo = 'Feminino'; //valor do Radio no cadastro da crianca
-  String _mensagem = '';
+  int _aba = 0; 
+  String _filtro = 'todas'; 
+  String _sexo = 'Feminino';
   String _erro = '';
 
   @override
@@ -192,7 +187,6 @@ class _PainelInstituicaoState extends State<PainelInstituicao> {
     });
   }
 
-  //executa uma acao do control, mostra a mensagem e recarrega as listas
   Future<void> _executar(Future<String> acao, String sucesso) async {
     String erro = await acao;
     if (!mounted) return;
@@ -280,7 +274,6 @@ class _PainelInstituicaoState extends State<PainelInstituicao> {
   }
 
   List<Widget> _abaCriancas() {
-    //filtro simples com Radio (aula 06)
     List<Map<String, dynamic>> lista = _criancas.where((c) {
       bool ativa = c['status'] == 1;
       bool apadrinhada = c['apadrinhamento_id'] != null;

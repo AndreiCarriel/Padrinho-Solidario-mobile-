@@ -1,17 +1,11 @@
-//MODEL: classes que representam as tabelas (aula 14) e o CEP (aula 13)
-
-//tabela usuarios
 class Usuario {
-  //atributos da classe
   String nome;
   String email;
   String senha;
   String telefone;
 
-  //construtor da classe
   Usuario(this.nome, this.email, this.senha, this.telefone);
 
-  //converte o objeto em map para gravar no SQLite
   Map<String, dynamic> toMap() {
     return {
       'nome': nome,
@@ -22,12 +16,11 @@ class Usuario {
   }
 }
 
-//tabela padrinho
 class Padrinho {
   String cpf;
   double renda;
   String endereco;
-  int? idUsuario; //preenchido depois que o usuario for gravado
+  int? idUsuario; 
 
   Padrinho(this.cpf, this.renda, this.endereco);
 
@@ -41,12 +34,11 @@ class Padrinho {
   }
 }
 
-//tabela instituicao
 class Instituicao {
   String cep;
   String responsavel;
   String necessidades;
-  int? idUsuario; //preenchido depois que o usuario for gravado
+  int? idUsuario; 
 
   Instituicao(this.cep, this.responsavel, this.necessidades);
 
@@ -60,7 +52,6 @@ class Instituicao {
   }
 }
 
-//tabela apadrinhado (a crianca). status: 1 = ativo e 0 = inativo
 class Apadrinhado {
   String nome;
   int idade;
@@ -84,16 +75,15 @@ class Apadrinhado {
   }
 }
 
-//tabela doacoes
 class Doacao {
   int idPadrinho;
   int idApadrinhado;
   int idInstituicao;
   String tipo;
-  double? valor; //so existe quando o tipo for Dinheiro
+  double? valor; 
   String descricao;
   String dataDoacao;
-  String status; //Informada, Recebida ou Não Recebida
+  String status; 
 
   Doacao(this.idPadrinho, this.idApadrinhado, this.idInstituicao, this.tipo,
       this.valor, this.descricao, this.dataDoacao,
@@ -113,9 +103,7 @@ class Doacao {
   }
 }
 
-//modelo do CEP (aula 13 - consumo de API)
 class Cep {
-  //os atributos final podem ser nulos, mas nao podem ser modificados
   final String? cep;
   final String? logradouro;
   final String? complemento;
@@ -123,12 +111,9 @@ class Cep {
   final String? localidade;
   final String? uf;
 
-  //construtor
   Cep({this.cep, this.logradouro, this.complemento, this.bairro,
       this.localidade, this.uf});
 
-  //factory: usado porque os dados vem de fora (json), cada atributo do json
-  //e passado para o nosso objeto
   factory Cep.fromJson(Map<String, dynamic> json) {
     return Cep(
       cep: json['cep'],
